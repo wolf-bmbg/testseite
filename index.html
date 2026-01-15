@@ -75,30 +75,18 @@
     <h2>Galerie</h2>
 
     <div class="gallery">
-      <a href="#img05"><img src="images/Ferienhaus05.jpeg" alt="Galeriebild 1"></a>
-      <a href="#img06"><img src="images/Ferienhaus06.jpeg" alt="Galeriebild 2"></a>
-      <a href="#img07"><img src="images/Ferienhaus07.jpeg" alt="Galeriebild 3"></a>
-      <a href="#img08"><img src="images/Ferienhaus08.jpeg" alt="Galeriebild 4"></a>
-      <a href="#img09"><img src="images/Ferienhaus09.jpeg" alt="Galeriebild 5"></a>
-      <a href="#img10"><img src="images/Ferienhaus10.jpeg" alt="Galeriebild 6"></a>
-      <a href="#img11"><img src="images/Ferienhaus11.jpeg" alt="Galeriebild 7"></a>
-      <a href="#img12"><img src="images/Ferienhaus12.jpeg" alt="Galeriebild 8"></a>
-      <a href="#img13"><img src="images/Ferienhaus13.jpeg" alt="Galeriebild 9"></a>
-      <a href="#img14"><img src="images/Ferienhaus14.jpeg" alt="Galeriebild 10"></a>
+      <img src="images/Ferienhaus05.jpeg" data-index="0" alt="Galeriebild 1"></a>
+      <img src="images/Ferienhaus06.jpeg" data-index="1" alt="Galeriebild 2"></a>
+      <img src="images/Ferienhaus07.jpeg" data-index="2" alt="Galeriebild 3"></a>
+      <img src="images/Ferienhaus08.jpeg" data-index="3" alt="Galeriebild 4"></a>
+      <img src="images/Ferienhaus09.jpeg" data-index="4" alt="Galeriebild 5"></a>
+      <img src="images/Ferienhaus10.jpeg" data-index="5" alt="Galeriebild 6"></a>
+      <img src="images/Ferienhaus11.jpeg" data-index="6" alt="Galeriebild 7"></a>
+      <img src="images/Ferienhaus12.jpeg" data-index="7" alt="Galeriebild 8"></a>
+      <img src="images/Ferienhaus13.jpeg" data-index="8" alt="Galeriebild 9"></a>
+      <img src="images/Ferienhaus14.jpeg" data-index="9" alt="Galeriebild 10"></a>
     </div>
   </section>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="img05"><a href="#bilder"><img src="images/Ferienhaus05.jpeg"></a></div>
-  <div class="lightbox" id="img06"><a href="#bilder"><img src="images/Ferienhaus06.jpeg"></a></div>
-  <div class="lightbox" id="img07"><a href="#bilder"><img src="images/Ferienhaus07.jpeg"></a></div>
-  <div class="lightbox" id="img08"><a href="#bilder"><img src="images/Ferienhaus08.jpeg"></a></div>
-  <div class="lightbox" id="img09"><a href="#bilder"><img src="images/Ferienhaus09.jpeg"></a></div>
-  <div class="lightbox" id="img10"><a href="#bilder"><img src="images/Ferienhaus10.jpeg"></a></div>
-  <div class="lightbox" id="img11"><a href="#bilder"><img src="images/Ferienhaus11.jpeg"></a></div>
-  <div class="lightbox" id="img12"><a href="#bilder"><img src="images/Ferienhaus12.jpeg"></a></div>
-  <div class="lightbox" id="img13"><a href="#bilder"><img src="images/Ferienhaus13.jpeg"></a></div>
-  <div class="lightbox" id="img14"><a href="#bilder"><img src="images/Ferienhaus14.jpeg"></a></div>
 
   <section id="kontakt">
     <h2>Kontakt</h2>
@@ -120,6 +108,12 @@
     <a href="#datenschutz">Datenschutz</a>
   </p>
 </footer>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>

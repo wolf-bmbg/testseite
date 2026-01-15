@@ -68,7 +68,9 @@ h1, h2 {
 }
 
 .gallery img {
+  width: 100%;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 /* Lightbox */
@@ -76,15 +78,29 @@ h1, h2 {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.9);
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10000;
+}
+
+.lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .lightbox img {
   max-width: 90vw;
   max-height: 90vh;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.lightbox.active img {
+  transform: scale(1);
 }
 
 .lightbox:target {
