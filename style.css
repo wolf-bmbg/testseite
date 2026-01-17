@@ -162,21 +162,23 @@ h1, h2 {
 .booking-table {
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .booking-table caption {
   caption-side: top;
-  text-align: left;
+  text-align: center;
   font-weight: bold;
   font-size: 1.2em;
   margin-bottom: 0.5rem;
 }
 
-.booking-table td {
+.booking-table th, .booking-table td {
   border: 1px solid #ccc;
-  padding: 0.5rem;
+  width: 14.28%; /* 7 Spalten */
+  height: 40px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .booking-table td.free {
@@ -197,8 +199,9 @@ h1, h2 {
   font-weight: bold;
 }
 
+/* Legende */
 .legend {
-  margin-top: 1rem;
+  margin-bottom: 2rem;
   font-size: 0.9rem;
 }
 
@@ -211,7 +214,6 @@ h1, h2 {
   vertical-align: middle;
 }
 
-/* Farben wie im Kalender */
 .legend-item.free { background: #e6f7e6; }
 .legend-item.booked { background: #f8d7da; }
 .legend-item.past { background: #eeeeee; }

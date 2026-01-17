@@ -59,108 +59,102 @@ lightbox.addEventListener('touchend', e => {
   }
 });
 
-async function loadBooking() {
-  const res = await fetch("booking.json");
-  const data = await res.json();
-
-  const container = document.getElementById("booking-container");
-
-  for (const month in data) {
-    const block = document.createElement("div");
-    block.className = "month";
-
-    const title = document.createElement("h3");
-    title.textContent = formatMonth(month);
-    block.appendChild(title);
-
-    const table = document.createElement("table");
-    table.innerHTML = "<tr><th>Zeitraum</th><th>Status</th></tr>";
-
-    data[month].forEach(entry => {
-      const tr = document.createElement("tr");
-      tr.className = entry.status;
-      tr.innerHTML = `<td>${formatDate(entry.from)} – ${formatDate(entry.to)}</td>
-                      <td>${entry.status === "free" ? "frei" : "gebucht"}</td>`;
-      table.appendChild(tr);
-    });
-
-    block.appendChild(table);
-    container.appendChild(block);
-  }
-}
-
-function formatMonth(m) {
-  const [y, mo] = m.split("-");
-  return new Date(y, mo - 1).toLocaleString("de-DE", { month: "long", year: "numeric" });
-}
-
-function formatDate(d) {
-  return new Date(d).toLocaleDateString("de-DE");
-}
-
-
 document.addEventListener("DOMContentLoaded", () => {
 
   fetch("booking.json")
     .then(res => res.json())
-    .then(data => renderCalendar(data));
+    .then(data => renderMonthCalendars(data));
 
-  // Monatsname formatieren: "Januar 2026"
-  function formatMonth(m) {
-    const [y, mo] = m.split("-");
-    return new Date(y, mo - 1).toLocaleString("de-DE", { month: "long", year: "numeric" });
-  }
-
-  // Datum formatieren: TT.M.
-  function formatDate(d) {
-    const date = new Date(d);
-    return `${date.getDate()}.${date.getMonth()+1}`;
-  }
-
-  // Zeitraum: TT.M. – TT.M.
-  function formatPeriod(period) {
-    return `${formatDate(period.from)} – ${formatDate(period.to)}`;
-  }
-
-  // Status: past = grau, booked = rot, free = grün, current = gelb
-  function getStatusClass(period) {
+  // Status-Funktion für jeden Tag
+  function getDayStatus(date, bookings) {
     const today = new Date();
-    const start = new Date(period.from);
-    const end = new Date(period.to);
+    today.setHours(0,0,0,0); // Heute 00:00
 
-    if (today >= start && today <= end) return "current";
-    if (end < today) return "past";
-    if (period.status === "booked") return "booked";
+    const d = new Date(date);
+    d.setHours(0,0,0,0);    // Vergleich nur nach Datum
+
+    // 1. Vergangenheit
+    if (d < today) return "past";
+
+    // 2. Heute
+    if (d.getTime() === today.getTime()) return "current";
+
+    // 3. Buchungen prüfen
+    for (const period of bookings) {
+      const start = new Date(period.from); start.setHours(0,0,0,0);
+      const end   = new Date(period.to);   end.setHours(0,0,0,0);
+
+      if (d >= start && d <= end) {
+        if (period.status === "booked") return "booked";
+        if (period.status === "free") return "free";
+      }
+    }
+
+    // 4. Standard = frei
     return "free";
   }
 
-  // Render-Funktion
-  function renderCalendar(data) {
+
+  function renderMonthCalendars(data) {
     const container = document.getElementById("booking");
 
     Object.keys(data).forEach(monthKey => {
-      const monthTable = document.createElement("table");
-      monthTable.className = "booking-table";
+      const [year, month] = monthKey.split("-");
+      const y = parseInt(year,10);
+      const m = parseInt(month,10)-1;
 
-      // Überschrift = Monatsname + Jahr
+      const firstDay = new Date(y,m,1);
+      const lastDay = new Date(y,m+1,0);
+      const daysInMonth = lastDay.getDate();
+
+      // Tabelle
+      const table = document.createElement("table");
+      table.className = "booking-table";
+
+      // Caption
       const caption = document.createElement("caption");
-      caption.textContent = formatMonth(monthKey);
-      monthTable.appendChild(caption);
+      caption.textContent = firstDay.toLocaleString("de-DE", { month: "long", year: "numeric" });
+      table.appendChild(caption);
 
-      // Jede Zeile = ein 2-Wochen-Block
-      data[monthKey].forEach(period => {
-        const row = document.createElement("tr");
+      // Header: Mo, Di, ... So
+      const headerRow = document.createElement("tr");
+      ["Mo","Di","Mi","Do","Fr","Sa","So"].forEach(day => {
+        const th = document.createElement("th");
+        th.textContent = day;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      let row = document.createElement("tr");
+      // Leere Zellen vor dem ersten Tag
+      let weekday = firstDay.getDay(); // 0=So, 1=Mo ...
+      let emptyCells = weekday === 0 ? 6 : weekday-1;
+      for (let i=0;i<emptyCells;i++) row.appendChild(document.createElement("td"));
+
+      for (let d=1; d<=daysInMonth; d++) {
+        const date = new Date(y,m,d);
         const cell = document.createElement("td");
 
-        const cls = getStatusClass(period);
+        const cls = getDayStatus(date, data[monthKey]);
         cell.classList.add(cls);
-        cell.textContent = formatPeriod(period);
+        cell.textContent = d;
 
         row.appendChild(cell);
-        monthTable.appendChild(row);
-      });
 
-      container.appendChild(monthTable);
+        // Wenn Sonntag → neue Zeile
+        if (date.getDay() === 0) {
+          table.appendChild(row);
+          row = document.createElement("tr");
+        }
+      }
+
+      // Restliche leere Zellen am Ende
+      while (row.children.length < 7) {
+        row.appendChild(document.createElement("td"));
+      }
+      table.appendChild(row);
+
+      container.appendChild(table);
     });
   }
 
