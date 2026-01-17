@@ -98,4 +98,71 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString("de-DE");
 }
 
-loadBooking();
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  fetch("booking.json")
+    .then(res => res.json())
+    .then(data => renderCalendar(data));
+
+  // Monatsname formatieren: "Januar 2026"
+  function formatMonth(m) {
+    const [y, mo] = m.split("-");
+    return new Date(y, mo - 1).toLocaleString("de-DE", { month: "long", year: "numeric" });
+  }
+
+  // Datum formatieren: TT.M.
+  function formatDate(d) {
+    const date = new Date(d);
+    return `${date.getDate()}.${date.getMonth()+1}`;
+  }
+
+  // Zeitraum: TT.M. – TT.M.
+  function formatPeriod(period) {
+    return `${formatDate(period.from)} – ${formatDate(period.to)}`;
+  }
+
+  // Status: past = grau, booked = rot, free = grün, current = gelb
+  function getStatusClass(period) {
+    const today = new Date();
+    const start = new Date(period.from);
+    const end = new Date(period.to);
+
+    if (today >= start && today <= end) return "current";
+    if (end < today) return "past";
+    if (period.status === "booked") return "booked";
+    return "free";
+  }
+
+  // Render-Funktion
+  function renderCalendar(data) {
+    const container = document.getElementById("booking");
+
+    Object.keys(data).forEach(monthKey => {
+      const monthTable = document.createElement("table");
+      monthTable.className = "booking-table";
+
+      // Überschrift = Monatsname + Jahr
+      const caption = document.createElement("caption");
+      caption.textContent = formatMonth(monthKey);
+      monthTable.appendChild(caption);
+
+      // Jede Zeile = ein 2-Wochen-Block
+      data[monthKey].forEach(period => {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        const cls = getStatusClass(period);
+        cell.classList.add(cls);
+        cell.textContent = formatPeriod(period);
+
+        row.appendChild(cell);
+        monthTable.appendChild(row);
+      });
+
+      container.appendChild(monthTable);
+    });
+  }
+
+});
+
