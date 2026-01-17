@@ -58,3 +58,44 @@ lightbox.addEventListener('touchend', e => {
     diff > 0 ? showNext() : showPrev();
   }
 });
+
+async function loadBooking() {
+  const res = await fetch("booking.json");
+  const data = await res.json();
+
+  const container = document.getElementById("booking-container");
+
+  for (const month in data) {
+    const block = document.createElement("div");
+    block.className = "month";
+
+    const title = document.createElement("h3");
+    title.textContent = formatMonth(month);
+    block.appendChild(title);
+
+    const table = document.createElement("table");
+    table.innerHTML = "<tr><th>Zeitraum</th><th>Status</th></tr>";
+
+    data[month].forEach(entry => {
+      const tr = document.createElement("tr");
+      tr.className = entry.status;
+      tr.innerHTML = `<td>${formatDate(entry.from)} – ${formatDate(entry.to)}</td>
+                      <td>${entry.status === "free" ? "frei" : "gebucht"}</td>`;
+      table.appendChild(tr);
+    });
+
+    block.appendChild(table);
+    container.appendChild(block);
+  }
+}
+
+function formatMonth(m) {
+  const [y, mo] = m.split("-");
+  return new Date(y, mo - 1).toLocaleString("de-DE", { month: "long", year: "numeric" });
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString("de-DE");
+}
+
+loadBooking();
