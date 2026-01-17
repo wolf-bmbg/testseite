@@ -124,3 +124,38 @@ h1, h2 {
   padding: 1rem;
   font-size: 0.9rem;
 }
+
+/* Buchungsübersicht */
+.booking {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.month h3 {
+  margin-bottom: 0.5rem;
+}
+
+.month table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.month th,
+.month td {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Statusfarben */
+.free {
+  background-color: #e6f4ea;   /* leicht grün */
+}
+
+.booked {
+  background-color: #fbeaea;   /* leicht rot */
+}
+
